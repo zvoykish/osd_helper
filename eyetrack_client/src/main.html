@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Geeky eye tracker</title>
+    <script src="jquery-2.1.1.min.js"></script>
+    <script type="text/javascript">
+        function myCallback(jsonStr) {
+            var json = $.parseJSON(jsonStr);
+            console.log('Received: ' + jsonStr);
+            var url = json.url;
+            $('#result').html('<img src="' + url + '"></img>');
+
+            setTimeout(function() {
+                getJson();
+            }, 1000);
+        };
+
+        function getJson() {
+                var ipAddress = $('#ip_address').val();
+                var port = $('#port').val();
+                var url = 'http://' + ipAddress + ':' + port + '?callback=myCallback';
+
+                $.ajax({
+                   type: 'GET',
+                    url: url,
+                    async: false,
+                    jsonpCallback: 'myCallback',
+                    contentType: "application/json",
+                    dataType: 'jsonp',
+                    success: function(json) {},
+                    error: function(e) {
+                        $('#result').html('Error: ' + e.message);
+                    }
+                });
+        };
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#btn_connect').click(function() {
+                setTimeout(function() {
+                    getJson();
+                }, 1000);
+            });
+
+            $('#image_area').
+        });
+    </script>
+</head>
+
+<body>
+<div style="padding-bottom: 1em;">
+    God bless you, God bless Steve jobs and god bless America! :)<br/>
+    You should listen to a GET to http://&lt;IP Address&gt;:&lt;Port&gt; (root).<br/>
+    <span style="padding-top: 1em; padding-bottom: 1em;">That endpoint MUST return the following response:</span><br/>
+    <span style="font-size: 150%;">myCallback('{"data":"&lt;<strong>Your data</strong>&gt;"}')</span><br/><br/>
+    Later on I will POST to the same root URL whenever something happens...
+</div>
+<span>IP Address: </span><input id="ip_address" type="text" name="ip_address" value="localhost"/>
+<span>Port: </span><input id="port" type="text" name="port" value="8080"/>
+<button id="btn_connect" title="Connect">Connect</button>
+<br/>
+<div id="result" style="min-width: 100%; min-height: 200px; border: 1px solid black; padding-top: 1em;">
+    <div id="image_area"></div>
+</div>
+</body>
+</html>
